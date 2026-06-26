@@ -1,4 +1,4 @@
-namespace Script._Core._FSM
+namespace _Script._Core._FSM
 {
     public interface IState
     {

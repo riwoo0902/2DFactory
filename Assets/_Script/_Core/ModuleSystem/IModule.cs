@@ -1,4 +1,4 @@
-namespace Script._Core.ModuleSystem
+namespace _Script._Core.ModuleSystem
 {
     public interface IModule
     {

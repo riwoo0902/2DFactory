@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Script._Modules._FSMModule.Editor
+namespace _Script._Agent._Modules._FSMModule.Editor
 {
     [CustomEditor(typeof(MonoFsmModule))]
     public class MonoFsmModuleEditor : UnityEditor.Editor

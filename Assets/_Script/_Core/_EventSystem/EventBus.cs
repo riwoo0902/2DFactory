@@ -1,6 +1,6 @@
 using System;
 
-namespace Script._Core._EventSystem
+namespace _Script._Core._EventSystem
 {
     public static class EventBus<T> where T : IEvent
     {

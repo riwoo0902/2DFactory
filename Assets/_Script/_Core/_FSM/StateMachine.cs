@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Script._Core._FSM
+namespace _Script._Core._FSM
 {
     public class StateMachine<T>
     {

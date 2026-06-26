@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Script._Core.ModuleSystem
+namespace _Script._Core.ModuleSystem
 {
     public abstract class ModuleOwner : MonoBehaviour
     {

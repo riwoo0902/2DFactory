@@ -1,9 +1,9 @@
 using System;
-using Script._Core._FSM;
-using Script._Core.ModuleSystem;
+using _Script._Core._FSM;
+using _Script._Core.ModuleSystem;
 using UnityEngine;
 
-namespace Script._Modules._FSMModule
+namespace _Script._Agent._Modules._FSMModule
 {
     public interface IMonoFsmModule
     {

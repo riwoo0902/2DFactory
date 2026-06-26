@@ -1,7 +1,7 @@
-using Script._Core.ModuleSystem;
+using _Script._Core.ModuleSystem;
 using UnityEngine;
 
-namespace Script._Modules._FSMModule
+namespace _Script._Agent._Modules._FSMModule
 {
     public abstract class AbstractMonoState : MonoBehaviour,IMonoState
     {
