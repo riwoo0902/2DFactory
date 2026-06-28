@@ -266,6 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 579676474}
   - component: {fileID: 579676475}
+  - component: {fileID: 579676476}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -301,6 +302,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08e8e60840944b33b004d7e1179bca2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Script._Map.MapMaker
+--- !u!156049354 &579676476
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579676473}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 1, z: 1}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
