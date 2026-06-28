@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using LrwLib.LrwAddClass;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace _Script._Map
 {
@@ -11,12 +11,23 @@ namespace _Script._Map
         
         private void Awake()
         {
-            _layers = GetComponentsInChildren<IMapLayer>();
-
-            _layers.Foreach(x => x.Initialize());
+            IMapLayer[] layers = GetComponentsInChildren<IMapLayer>();
+            
+            CreateTask();
             
         }
+
+        private async void CreateTask() => await Task.Run(CreateLayers);
         
+        private void CreateLayers()
+        {
+            IMapLayer prevLayer = null;
+            foreach (IMapLayer layer in _layers)
+            {
+                layer.CreateLayer(prevLayer);
+                prevLayer = layer;
+            }
+        }
         
         
         
