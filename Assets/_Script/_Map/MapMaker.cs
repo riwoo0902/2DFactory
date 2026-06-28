@@ -1,20 +1,23 @@
-using System;
+using LrwLib.LrwAddClass;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace _Script._Map
 {
     [DefaultExecutionOrder(-10)]
-    [RequireComponent(typeof(Tilemap))]
     public class MapMaker : MonoBehaviour
     {
-        private Tilemap _tilemap;
+        private IMapLayer[] _layers;
+        
         private void Awake()
         {
-            _tilemap = GetComponent<Tilemap>();
-            
+            _layers = GetComponentsInChildren<IMapLayer>();
+
+            _layers.Foreach(x => x.Initialize());
             
         }
+        
+        
         
         
     }
