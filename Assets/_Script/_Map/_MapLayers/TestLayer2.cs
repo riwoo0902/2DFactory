@@ -2,17 +2,17 @@ using UnityEngine;
 
 namespace _Script._Map._MapLayers
 {
-    public class TestLayer : AbstractMapLayer
+    public class TestLayer2 : AbstractMapLayer
     {
         public override void Initialize()
         {
             base.Initialize();
-            Priority = 0;
+            Priority = -1;
         }
-
+        
         public override void CreateLayer(IMapLayer prevLayer = null)
         {
-            Debug.Log("2");
+            Debug.Log("1");
         }
         
     }

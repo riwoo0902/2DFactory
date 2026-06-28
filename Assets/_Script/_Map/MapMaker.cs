@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using LrwLib.ButtonAttribute;
 using LrwLib.LrwAddClass;
 using UnityEngine;
 
@@ -11,13 +12,18 @@ namespace _Script._Map
         
         private void Awake()
         {
-            IMapLayer[] layers = GetComponentsInChildren<IMapLayer>();
-            
-            CreateTask();
-            
+            CreateMap();
         }
 
-        private async void CreateTask() => await Task.Run(CreateLayers);
+        [Button]
+        private async void CreateMap()
+        {
+            _layers = GetComponentsInChildren<IMapLayer>();
+            
+            _layers.Foreach(x => x.Initialize());
+            
+            await Task.Run(CreateLayers);
+        }
         
         private void CreateLayers()
         {

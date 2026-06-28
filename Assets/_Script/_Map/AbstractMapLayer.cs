@@ -7,6 +7,8 @@ namespace _Script._Map
     [RequireComponent(typeof(Tilemap))]
     public abstract class AbstractMapLayer : MonoBehaviour,IMapLayer
     {
+        public int Priority { get; protected set; }
+        
         private Tilemap _tilemap;
         private Dictionary<Vector3Int, Tile> _tiles;
 
