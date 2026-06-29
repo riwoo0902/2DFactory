@@ -14,6 +14,15 @@ namespace _Script._Map._MapLayers
         {
             Debug.Log("2");
         }
-        
+
+        public override float GetLoadingValue()
+        {
+            return 0;
+        }
+
+        public override bool Complete()
+        {
+            return false;
+        }
     }
 }

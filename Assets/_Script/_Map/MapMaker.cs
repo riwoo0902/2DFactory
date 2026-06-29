@@ -13,21 +13,21 @@ namespace _Script._Map
     public class MapMaker : MonoBehaviour,IMap
     {
         private IMapLayer[] _layers;
-        private Loader<IMapLayer> _loader;
         
         private void Awake()
         {
-            _layers = GetComponentsInChildren<IMapLayer>();
+            _layers = GetComponentsInChildren<IMapLayer>(true);
             
             _ = CreateMap();
             
             ServiceLocator.Register<IMap>(this);
 
-            StartCoroutine(UpdateLoadingData(new Loader<IMapLayer>(_layers)));
+            StartCoroutine(UpdateLoadingData(_layers));
         }
 
-        private IEnumerator UpdateLoadingData(Loader<IMapLayer> loader)
+        private IEnumerator UpdateLoadingData(IMapLayer[] layers)
         {
+            Loader<IMapLayer> loader = new Loader<IMapLayer>(layers);
             if(loader == null) throw new Exception("Map loader is null");
             
             while (true)

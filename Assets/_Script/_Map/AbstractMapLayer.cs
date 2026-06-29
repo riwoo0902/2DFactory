@@ -20,11 +20,8 @@ namespace _Script._Map
         }
 
         public abstract void CreateLayer(IMapLayer prevLayer = null);
-        public float GetLoadingValue() => 0;
-
-        public bool Complete()
-        {
-            return false;
-        }
+        public abstract float GetLoadingValue();
+        public abstract bool Complete();
+        
     }
 }
