@@ -13,22 +13,24 @@ namespace _Script._Map
     [RequireComponent(typeof(Grid))]
     public class MapMaker : MonoBehaviour,IMap
     {
-        private IMapLayer[] _layers;
+        private MapLayerOrderResolver _mapLayerOrderResolver;
                 
         private void Awake()
         {
             ServiceLocator.Register<IMap>(this);
             
-            _layers = GetComponentsInChildren<IMapLayer>(true);
+            IMapLayer[] layers = GetComponentsInChildren<IMapLayer>(true);
             
-            foreach (IMapLayer layer in _layers)
+            foreach (IMapLayer layer in layers)
             {
                 layer.Initialize();
             }
             
+            _mapLayerOrderResolver = new MapLayerOrderResolver(layers);
+            
             _ = CreateMap();
             
-            StartCoroutine(UpdateLoadingData(_layers));
+            StartCoroutine(UpdateLoadingData(layers));
         }
         
         private void OnDestroy()
@@ -56,10 +58,9 @@ namespace _Script._Map
         
         private void CreateLayers()
         {
-            MapLayerOrderResolver mapLayerOrderResolver = new MapLayerOrderResolver(_layers);
-            while (mapLayerOrderResolver.TryGetNextLayer(out IMapLayer mapLayer))
+            while (_mapLayerOrderResolver.TryGetNextLayer(out IMapLayer mapLayer))
             {
-                mapLayer.CreateLayer(mapLayerOrderResolver.MapData);
+                mapLayer.CreateLayer(_mapLayerOrderResolver.MapData);
             }
         }
         
