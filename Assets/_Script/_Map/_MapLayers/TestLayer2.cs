@@ -17,12 +17,12 @@ namespace _Script._Map._MapLayers
 
         public override float GetLoadingValue()
         {
-            return 0;
+            return 100;
         }
 
         public override bool Complete()
         {
-            return false;
+            return true;
         }
     }
 }
