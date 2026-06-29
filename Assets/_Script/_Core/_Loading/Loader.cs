@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace _Script._Core._Loading
 {
-    public class Loader
+    public class Loader<T> where T : ILoading
     {
-        private readonly ILoading[] _loadings;
+        private readonly T[] _loadings;
         private readonly int _count;
         
-        public Loader(ILoading[] loadings)
+        public Loader(T[] loadings)
         {
             if(loadings == null) throw new Exception("Loading is null");
             if(loadings.Length == 0) throw new Exception("Loading is empty");
@@ -21,7 +21,10 @@ namespace _Script._Core._Loading
         public float GetLoadingValue()
         {
             float sum = 0;
-            foreach (ILoading loading in _loadings) sum += Mathf.Clamp(loading.GetLoadingValue(),0,100);
+            foreach (T loading in _loadings)
+            {
+                sum += loading != null ? Mathf.Clamp(loading.GetLoadingValue(),0,100) : 0;
+            }
             return Mathf.Clamp(sum / _count,0,100);
         }
         
