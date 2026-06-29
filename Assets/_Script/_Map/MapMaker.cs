@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using _Script._Core._EventSystem;
 using _Script._Core._Loading;
 using _Script._Core._ServiceLocator;
+using _Script._Map._MapCreate;
 using UnityEngine;
 
 namespace _Script._Map
@@ -16,15 +17,25 @@ namespace _Script._Map
         
         private void Awake()
         {
+            ServiceLocator.Register<IMap>(this);
+            
             _layers = GetComponentsInChildren<IMapLayer>(true);
+            
+            foreach (IMapLayer layer in _layers)
+            {
+                layer.Initialize();
+            }
             
             _ = CreateMap();
             
-            ServiceLocator.Register<IMap>(this);
-
             StartCoroutine(UpdateLoadingData(_layers));
         }
-
+        
+        private void OnDestroy()
+        {
+            ServiceLocator.Register<IMap>(new NullMapService());
+        }
+        
         private IEnumerator UpdateLoadingData(IMapLayer[] layers)
         {
             Loader<IMapLayer> loader = new Loader<IMapLayer>(layers);
@@ -38,30 +49,14 @@ namespace _Script._Map
             }
             EventBus<MapLoadingEndEvent>.Invoke(new MapLoadingEndEvent());
         }
-
-        private void OnDestroy()
-        {
-            ServiceLocator.Register<IMap>(new NullMapService());
-        }
-
-        private async Task CreateMap()
-        {
-            foreach (IMapLayer layer in _layers)
-            {
-                layer.Initialize();
-            }
-            
-            await Task.Run(CreateLayers);
-        }
+        
+        private async Task CreateMap() => await Task.Run(CreateLayers);
         
         private void CreateLayers()
         {
-            IMapLayer prevLayer = null;
-            foreach (IMapLayer layer in _layers)
-            {
-                layer.CreateLayer(prevLayer);
-                prevLayer = layer;
-            }
+            
+            
+            
         }
         
     }

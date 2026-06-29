@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Script._Map._MapLayers
@@ -7,14 +9,18 @@ namespace _Script._Map._MapLayers
         public override void Initialize()
         {
             base.Initialize();
-            Priority = -1;
-        }
-        
-        public override void CreateLayer(IMapLayer prevLayer = null)
-        {
-            Debug.Log("1");
         }
 
+        public override Type[] GetRequireTypes()
+        {
+            return new Type[]{};
+        }
+
+        public override void CreateLayer(Dictionary<Type, IMapLayer> requireData = null)
+        {
+            Debug.Log(2);
+        }
+        
         public override float GetLoadingValue()
         {
             return 100;

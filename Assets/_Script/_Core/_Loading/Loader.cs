@@ -14,8 +14,9 @@ namespace _Script._Core._Loading
             if(loadings == null) throw new Exception("Loading is null");
             if(loadings.Length == 0) throw new Exception("Loading is empty");
             
-            _loadings = loadings;
-            _count = loadings.Length;
+            _loadings = loadings.Clone() as T[];
+            if(_loadings == null) throw new Exception("Loading Clone is null");
+            _count = _loadings.Length;
         }
 
         public float GetLoadingValue()
