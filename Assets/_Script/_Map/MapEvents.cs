@@ -5,19 +5,23 @@ namespace _Script._Map
 {
     public static class MapEvents
     {
-        public static readonly MapLoadingEvent MapLoadingEvent = new MapLoadingEvent();
+        public static readonly MapLoadingEvent MapLoadingEvent = new();
     }
 
     public class MapLoadingEvent : IEvent
     {
         public float Value { get; private set; } = 0;
-        public bool Completed { get; private set; } = false;
 
-        public void Init(float value, bool completed)
+        public MapLoadingEvent Init(float value)
         {
             Value = value;
-            Completed = completed;
+            return this;
         }
+    }
+
+    public struct MapLoadingEndEvent : IEvent
+    {
         
     }
+    
 }

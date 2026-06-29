@@ -24,7 +24,7 @@ namespace _Script._Map
 
         public bool Complete()
         {
-            return true;
+            return false;
         }
     }
 }
