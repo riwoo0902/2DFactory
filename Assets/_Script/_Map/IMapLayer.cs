@@ -8,7 +8,6 @@ namespace _Script._Map
     {
         Type[] GetRequireTypes();
         void Initialize();
-        
         void CreateLayer(Dictionary<Type,IMapLayer> requireData = null);
     }
 }

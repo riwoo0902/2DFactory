@@ -14,7 +14,7 @@ namespace _Script._Map
     public class MapMaker : MonoBehaviour,IMap
     {
         private IMapLayer[] _layers;
-        
+                
         private void Awake()
         {
             ServiceLocator.Register<IMap>(this);
@@ -47,6 +47,8 @@ namespace _Script._Map
                 if(loader.Complete()) break;
                 yield return null;
             }
+            
+            
             EventBus<MapLoadingEndEvent>.Invoke(new MapLoadingEndEvent());
         }
         
@@ -54,9 +56,11 @@ namespace _Script._Map
         
         private void CreateLayers()
         {
-            
-            
-            
+            MapLayerOrderResolver mapLayerOrderResolver = new MapLayerOrderResolver(_layers);
+            while (mapLayerOrderResolver.TryGetNextLayer(out IMapLayer mapLayer))
+            {
+                mapLayer.CreateLayer(mapLayerOrderResolver.MapData);
+            }
         }
         
     }

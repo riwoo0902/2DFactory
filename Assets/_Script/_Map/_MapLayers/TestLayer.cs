@@ -13,7 +13,7 @@ namespace _Script._Map._MapLayers
 
         public override Type[] GetRequireTypes()
         {
-            return new Type[]{};
+            return new Type[]{typeof(TestLayer2)};
         }
 
         public override void CreateLayer(Dictionary<Type, IMapLayer> requireData = null)
