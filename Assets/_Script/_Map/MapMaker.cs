@@ -50,7 +50,6 @@ namespace _Script._Map
                 yield return null;
             }
             
-            
             EventBus<MapLoadingEndEvent>.Invoke(new MapLoadingEndEvent());
         }
         
