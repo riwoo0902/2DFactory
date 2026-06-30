@@ -1,35 +1,24 @@
-using System;
-using System.Collections.Generic;
+using _Script._Map._Interface;
 using UnityEngine;
 
 namespace _Script._Map._MapLayers
 {
     public class TestLayer : AbstractMapLayer
     {
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        public override Type[] GetRequireTypes()
-        {
-            return new Type[]{typeof(TestLayer2)};
-        }
-
-        public override void CreateLayer(Dictionary<Type, IMapLayer> requireData = null)
-        {
-            Debug.Log(1);
-        }
-
-
         public override float GetLoadingValue()
         {
-            return 0;
+            return 50f;
         }
 
         public override bool Complete()
         {
             return false;
         }
+        
+        public override void Initialize()
+        {
+            
+        }
+        
     }
 }

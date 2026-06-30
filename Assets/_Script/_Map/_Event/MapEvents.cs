@@ -1,7 +1,6 @@
-using System;
 using _Script._Core._EventSystem;
 
-namespace _Script._Map
+namespace _Script._Map._Event
 {
     public static class MapEvents
     {

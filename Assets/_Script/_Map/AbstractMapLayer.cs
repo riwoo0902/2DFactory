@@ -1,23 +1,17 @@
-using System;
-using System.Collections.Generic;
+using _Script._Core._Loading;
+using _Script._Map._Interface;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace _Script._Map
 {
-    [RequireComponent(typeof(Tilemap))]
-    public abstract class AbstractMapLayer : MonoBehaviour,IMapLayer
+    public abstract class AbstractMapLayer : MonoBehaviour,IAbstractMapLayer
     {
-        private Tilemap _tilemap;
+        [field:SerializeField] public LayerType LayerType { get; private set; }
 
-        public virtual void Initialize()
-        {
-            _tilemap = GetComponent<Tilemap>();
-        }
+        public abstract void Initialize();
 
-        public virtual Type[] GetRequireTypes() => null;
-        public abstract void CreateLayer(Dictionary<Type,IMapLayer> requireData = null);
         public abstract float GetLoadingValue();
+
         public abstract bool Complete();
         
     }

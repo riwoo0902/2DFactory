@@ -1,5 +1,6 @@
 using _Script._Core._EventSystem;
 using _Script._Map;
+using _Script._Map._Event;
 using UnityEngine;
 
 namespace _Script._Test
