@@ -13,6 +13,11 @@ namespace _Script._Map._MapGenerator
         #region GenerateStarter
         private void Awake()
         {
+            if (mapGenerateData == null)
+            {
+                Debug.LogError("MapGenerateData is null");
+                return;
+            }
             EventBus<MapSettingEndEvent>.Event += MapSettingEnd;
         }
         
