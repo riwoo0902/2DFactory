@@ -1,4 +1,4 @@
-namespace _Script._Map
+namespace _Script._Map._MapLayer
 {
     public enum LayerType
     {
