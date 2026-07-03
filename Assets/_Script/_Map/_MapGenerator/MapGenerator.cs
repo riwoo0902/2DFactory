@@ -44,8 +44,6 @@ namespace _Script._Map._MapGenerator
         {
             BiomeLayer biome = _map.GetLayer(LayerType.Biome) as BiomeLayer;
             
-            
-            
         }
         
         
