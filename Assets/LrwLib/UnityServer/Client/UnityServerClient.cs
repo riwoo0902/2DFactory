@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using LrwLib.UnityServer._ServerDebug;
 
 namespace LrwLib.UnityServer.Client
 {
@@ -28,12 +27,15 @@ namespace LrwLib.UnityServer.Client
             
             NetworkStream netWorkStream = client.GetStream();
             StreamReader reader = new StreamReader(netWorkStream,Encoding.UTF8);
-            _streamWriter = new StreamWriter(netWorkStream, Encoding.UTF8);
+            _streamWriter = new StreamWriter(netWorkStream, Encoding.UTF8)
+            {
+                AutoFlush = true
+            };
             
             Task.Run(() => Reader(reader));
         }
 
-        public static bool TryConnect(int port,out TcpClient client)
+        private static bool TryConnect(int port,out TcpClient client)
         {
             client = new TcpClient();
             
@@ -63,14 +65,21 @@ namespace LrwLib.UnityServer.Client
             }
             catch
             {
-                ServerDebug.AddDebug("Client disconnected");
+                
             }
         }
 
         public void Send(string message)
         {
-            if(_streamWriter == null) return;
-            _streamWriter.WriteLine(message);
+            try
+            {
+                _streamWriter.WriteLine(message);
+            }
+            catch
+            {
+                
+            }
+            
         }
         
         

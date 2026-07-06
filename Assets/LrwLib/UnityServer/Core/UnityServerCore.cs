@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using LrwLib.UnityServer._ServerDebug;
 using UnityEngine;
 
 namespace LrwLib.UnityServer.Core
@@ -51,6 +50,11 @@ namespace LrwLib.UnityServer.Core
             Task.Run(AcceptTcpClients);
         }
 
+        public void Close()
+        {
+            
+        }
+
         private void AcceptTcpClients()
         {
             int id = 0;
@@ -87,19 +91,26 @@ namespace LrwLib.UnityServer.Core
             }
             catch
             {
-                ServerDebug.AddDebug("Client disconnected");
+                
             }
         }
         
         public void Send(int id, string text)
         {
             if(id < 0 || id >= ClientCount) throw new Exception("id out of range");
-            
-            lock (_streamsLock)
+            try
             {
-                StreamWriter streamWriter = _streams[id];
-                streamWriter.WriteLine(text);
+                lock (_streamsLock)
+                {
+                    StreamWriter streamWriter = _streams[id];
+                    streamWriter.WriteLine(text);
+                }
             }
+            catch
+            {
+                
+            }
+            
         }
         
         public void SendAll(string text)

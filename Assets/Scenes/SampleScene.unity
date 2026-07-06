@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 452143398}
   - component: {fileID: 452143397}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ServerCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
