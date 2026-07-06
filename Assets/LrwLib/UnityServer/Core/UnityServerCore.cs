@@ -52,7 +52,31 @@ namespace LrwLib.UnityServer.Core
 
         public void Close()
         {
-            
+            if (!_isRunning)
+            {
+                Debug.LogWarning("ServerCore is not running");
+                return;
+            }
+
+            _isRunning = false;
+            _listener.Stop();
+
+            lock (_streamsLock)
+            {
+                foreach (StreamWriter stream in _streams)
+                {
+                    try
+                    {
+                        stream.Dispose();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+
+                _streams.Clear();
+            }
         }
 
         private void AcceptTcpClients()
@@ -60,7 +84,23 @@ namespace LrwLib.UnityServer.Core
             int id = 0;
             while (_isRunning)
             {
-                TcpClient client = _listener.AcceptTcpClient();
+                TcpClient client;
+                try
+                {
+                    client = _listener.AcceptTcpClient();
+                }
+                catch
+                {
+                    if (!_isRunning) break;
+                    continue;
+                }
+                
+                if (!_isRunning)
+                {
+                    client.Dispose();
+                    break;
+                }
+
                 NetworkStream stream = client.GetStream();
                 StreamWriter writer = new StreamWriter(stream,Encoding.UTF8)
                 {
