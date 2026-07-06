@@ -6,7 +6,7 @@ namespace _Script._Test
 {
     public class TestServerCore : MonoBehaviour
     {
-        private const int TestPort = 322109;
+        private const int TestPort = 32109;
         private UnityServerCore _core;
         
         private void Awake()
@@ -20,7 +20,13 @@ namespace _Script._Test
         {
             _core.Close();
         }
-        
+
+        private int value = 0;
+        private void Update()
+        {
+            _core.SendAll("Unity!" + value++);
+        }
+
         private void OnOnReadPacket(int id, string data)
         {
             Debug.Log($"id : {id}, data : {data}");
