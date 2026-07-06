@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="chat-window" picking-mode="Position" style="width: 420px; height: 520px; overflow: hidden; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(56, 62, 74); border-right-color: rgb(56, 62, 74); border-top-color: rgb(56, 62, 74); border-bottom-color: rgb(56, 62, 74); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; background-color: rgba(32, 36, 45, 0.96);"/>
+</ui:UXML>
