@@ -1,27 +1,16 @@
-using System;
 using _Script._Core._EventSystem;
+using _Script._Map._MapLayer;
 
 namespace _Script._Map
 {
-    public static class MapEvents
+    public struct MapSettingEndEvent : IEvent
     {
-        public static readonly MapLoadingEvent MapLoadingEvent = new();
-    }
-
-    public class MapLoadingEvent : IEvent
-    {
-        public float Value { get; private set; } = 0;
-
-        public MapLoadingEvent Init(float value)
+        public IMap Map { get; private set; }
+        
+        public MapSettingEndEvent(IMap map)
         {
-            Value = value;
-            return this;
+            Map = map;
         }
-    }
-
-    public struct MapLoadingEndEvent : IEvent
-    {
         
     }
-    
 }
