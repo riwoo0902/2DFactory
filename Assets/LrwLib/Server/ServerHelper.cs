@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace LrwLib.UnityServer
+namespace LrwLib.Server
 {
     public delegate void ServerPacket(int id, string data);
-    public static class UnityServerHelper
+    public static class ServerHelper
     {
         
         public static string GetCurrentIP()

@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace LrwLib.UnityServer.Core
+namespace LrwLib.Server.Core
 {
-    public class UnityServerCore
+    public class ServerCore
     {
         private readonly object _streamsLock = new();
         
@@ -31,9 +31,9 @@ namespace LrwLib.UnityServer.Core
             }
         }
         
-        public UnityServerCore(int port)
+        public ServerCore(int port)
         {
-            if(!UnityServerHelper.CheckPortRange(port)) throw new Exception("port out of range");
+            if(!ServerHelper.CheckPortRange(port)) throw new Exception("port out of range");
             _listener = new TcpListener(IPAddress.Any, port);
             _isRunning = false;
         }
@@ -131,7 +131,10 @@ namespace LrwLib.UnityServer.Core
             }
             catch
             {
-                
+                lock (_streamsLock)
+                {
+                    _streams[id] = null;
+                }
             }
         }
         

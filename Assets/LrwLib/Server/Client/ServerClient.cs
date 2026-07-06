@@ -4,9 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LrwLib.UnityServer.Client
+namespace LrwLib.Server.Client
 {
-    public class UnityServerClient
+    public class ServerClient
     {
         private readonly int _port;
         
@@ -14,9 +14,9 @@ namespace LrwLib.UnityServer.Client
         
         private StreamWriter _streamWriter;
         
-        public UnityServerClient(int port)
+        public ServerClient(int port)
         {
-            if(!UnityServerHelper.CheckPortRange(port)) throw new Exception("port out of range");
+            if(!ServerHelper.CheckPortRange(port)) throw new Exception("port out of range");
             
             _port = port;
         }
@@ -41,7 +41,7 @@ namespace LrwLib.UnityServer.Client
             
             try
             {
-                client.Connect(UnityServerHelper.GetCurrentIP(),port);
+                client.Connect(ServerHelper.GetCurrentIP(),port);
             }
             catch
             {

@@ -1,5 +1,5 @@
 using System;
-using LrwLib.UnityServer.Core;
+using LrwLib.Server.Core;
 using UnityEngine;
 
 namespace _Script._Test
@@ -7,11 +7,11 @@ namespace _Script._Test
     public class TestServerCore : MonoBehaviour
     {
         private const int TestPort = 32109;
-        private UnityServerCore _core;
+        private ServerCore _core;
         
         private void Awake()
         {
-            _core = new UnityServerCore(TestPort);
+            _core = new ServerCore(TestPort);
             _core.Start();
             _core.OnReadPacket += OnOnReadPacket;
         }
