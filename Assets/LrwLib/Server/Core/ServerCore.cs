@@ -60,6 +60,7 @@ namespace LrwLib.Server.Core
 
             _isRunning = false;
             _listener.Stop();
+            OnReadPacket = null;
 
             lock (_streamsLock)
             {
