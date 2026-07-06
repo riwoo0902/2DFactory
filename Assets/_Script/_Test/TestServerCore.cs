@@ -1,4 +1,5 @@
 using System;
+using LrwLib.Server;
 using LrwLib.Server.Core;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace _Script._Test
             _core = new ServerCore(TestPort);
             _core.Start();
             _core.OnReadPacket += OnOnReadPacket;
+            Debug.Log(ServerHelper.GetCurrentIP());
         }
         
         private void OnDestroy()
