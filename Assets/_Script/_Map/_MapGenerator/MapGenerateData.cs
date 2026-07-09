@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using _Script._Map._MapGenerator._TileData;
 using UnityEngine;
 
 namespace _Script._Map._MapGenerator
@@ -6,6 +9,18 @@ namespace _Script._Map._MapGenerator
     public class MapGenerateData : ScriptableObject
     {
         [field:SerializeField] public int Seed { get; private set; } = 10000;
+        [field:SerializeField] public Vector2 MapSize { get; private set; }
+        
+        [Header("LayerData")]
+        [field:SerializeField] public BiomeGenerateData BiomeGenerateData { get; private set; }
+        
+        
+    }
+    
+    [Serializable]
+    public class BiomeGenerateData
+    {
+        public List<BiomeSettingData> BiomeTileData { get; private set; }
         
     }
 }
