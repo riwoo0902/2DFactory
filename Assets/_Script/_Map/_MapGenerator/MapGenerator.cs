@@ -4,6 +4,7 @@ using _Script._Core._EventSystem;
 using _Script._Map._MapLayer;
 using _Script._Map._MapLayer._Layer;
 using _Script._Map._MapLayer._Layer._Layers;
+using _Script._Map._MapLayer._Layer._Layers._BiomeLayer;
 using UnityEngine;
 
 namespace _Script._Map._MapGenerator
@@ -43,6 +44,13 @@ namespace _Script._Map._MapGenerator
         private void MapGenerate()
         {
             BiomeLayer biome = _map.GetLayer(LayerType.Biome) as BiomeLayer;
+            
+            Debug.Assert(biome != null,"Biome Layer is not found");
+            
+            BiomeData data = biome.CreateBiome(mapGenerateData);
+            
+            
+            
             
         }
         

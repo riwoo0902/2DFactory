@@ -9,10 +9,14 @@ namespace _Script._Map._MapLayer._Layer
         public abstract LayerType GetLayerType();
 
         protected Tilemap Tilemap;
-        public virtual void Initialize()
+        
+        public void Initialize()
         {
             Tilemap = GetComponent<Tilemap>();
+            OnInitialize();
         }
-        
+
+        protected virtual void OnInitialize() {}
+
     }
 }
