@@ -3,15 +3,15 @@ using System;
 namespace LrwLib.ButtonAttribute
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = true)]
-    public sealed class ButtonAttribute : Attribute
+    public sealed class UnityButtonAttribute : Attribute
     {
         public string Label { get; }
 
-        public ButtonAttribute()
+        public UnityButtonAttribute()
         {
         }
 
-        public ButtonAttribute(string label)
+        public UnityButtonAttribute(string label)
         {
             Label = label;
         }
