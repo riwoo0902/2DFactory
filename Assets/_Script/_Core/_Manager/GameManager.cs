@@ -9,8 +9,7 @@ namespace _Script._Core._Manager
     {
         [SerializeField] private string[] managerTypeNames;
         
-        [SerializeField]
-        private AbstractManager[] managers;
+        private AbstractManager[] _managers;
         
         private void Awake()
         {
@@ -37,9 +36,9 @@ namespace _Script._Core._Manager
                 obj.transform.SetParent(transform);
             }
             
-            managers = managerObjects.Select(x => x.GetComponent<AbstractManager>()).ToArray();
+            _managers = managerObjects.Select(x => x.GetComponent<AbstractManager>()).ToArray();
             
-            foreach (AbstractManager manager in managers)
+            foreach (AbstractManager manager in _managers)
             {
                 manager.Initialize();
             }
