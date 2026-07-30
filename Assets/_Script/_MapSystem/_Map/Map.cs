@@ -28,5 +28,11 @@ namespace _Script._MapSystem._Map
             EventBus<MapGenerateEvent>.Invoke(new MapGenerateEvent(_mapGrid,seed));
         }
         
+        [UnityButton("TestGenerateMap")]
+        private void TestGenerateMap()
+        {
+            EventBus<MapGenerateEvent>.Invoke(new MapGenerateEvent(_mapGrid,Random.Range(0,10000)));
+        }
+        
     }
 }
