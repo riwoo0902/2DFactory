@@ -15,10 +15,6 @@ namespace _Script._MapSystem._MapGenerator._Biome
             Data = data;
             Size = 0;
         }
-
-        public override string ToString()
-        {
-            return $"{Data.name} {CenterPos}, {Size}";
-        }
+        
     }
 }
