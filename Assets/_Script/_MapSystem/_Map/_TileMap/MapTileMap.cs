@@ -60,6 +60,7 @@ namespace _Script._MapSystem._Map._TileMap
         public void Clear()
         {
             _tiles.Clear();
+            _tileChangeStack.Clear();
             _tilemap.ClearAllTiles();
         }
         

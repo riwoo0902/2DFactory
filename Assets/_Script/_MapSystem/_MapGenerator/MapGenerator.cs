@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Threading.Tasks;
-using _Script._Core;
 using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
 using _Script._MapSystem._Map._Tile;
@@ -9,7 +7,7 @@ using _Script._MapSystem._Map._Tile._Tiles;
 using _Script._MapSystem._Map._TileMap;
 using _Script._MapSystem._MapGenerator._Biome;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 namespace _Script._MapSystem._MapGenerator
 {
@@ -55,6 +53,10 @@ namespace _Script._MapSystem._MapGenerator
 
         private void BiomeGenerate(MapTileMap tileMap,int seed)
         {
+            Debug.Assert(tileMap != null,"BiomeTileMap is null");
+            
+            Random random = new Random(seed);
+            
             int biomeCount = mapGenerateData.BiomeCount;
             Biome[] biomes = new Biome[biomeCount];
             
@@ -62,8 +64,8 @@ namespace _Script._MapSystem._MapGenerator
             
             for (int i = 0; i < biomeCount; i++)
             {
-                Vector3Int pos = new Vector3Int(Random.Range(0, mapSize.y), Random.Range(0, mapSize.y));
-                TileData data = mapGenerateData.BiomeTiles[Random.Range(0, mapGenerateData.BiomeTiles.Length)];
+                Vector3Int pos = new Vector3Int(random.Next(0, mapSize.y), random.Next(0, mapSize.y));
+                TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
                 biomes[i] = new Biome(pos, data);
             }
             
@@ -77,15 +79,8 @@ namespace _Script._MapSystem._MapGenerator
                     tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
-
-            #region Debug
-
-            foreach (var biome in biomes)
-            {
-                Debug.Log(biome);
-            }
-
-            #endregion
+            
+            
             
         }
         
