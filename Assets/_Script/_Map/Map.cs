@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace _Script._Map
 {
+    [RequireComponent(typeof(Grid))]
     public class Map : MonoBehaviour
     {
         private MapGrid _mapGrid;
@@ -11,8 +10,8 @@ namespace _Script._Map
         private void Awake()
         {
             Grid grid = GetComponent<Grid>();
+            Debug.Assert(grid != null,"Grid is null");
             _mapGrid = new MapGrid(grid);
-            
             
         }
         

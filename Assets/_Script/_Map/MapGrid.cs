@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using _Script._Core._Manager;
+using _Script._Map._TileMap;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace _Script._Map
 {
@@ -9,19 +8,21 @@ namespace _Script._Map
     {
         private Grid _grid;
         
-        private Dictionary<MapLayerType, MapTileMap> _tileMap;
+        private Dictionary<MapLayerType, MapTileMap> _tileMaps;
         
         public MapGrid(Grid grid)
         {
             _grid = grid;
-            _tileMap = new();
-            foreach (MapLayerType layer in MapLayer.Layers)
-            {
-                GameObject go = new GameObject(layer.ToString(),typeof(Tilemap));
-                go.transform.SetParent(_grid.transform);
-                Tilemap tilemap = go.GetComponent<Tilemap>();
-                _tileMap.Add(layer,new MapTileMap(tilemap));
-            }
+            _tileMaps = new();
+            
+            _tileMaps.Add(MapLayerType.Biome,      new MapTileMap(nameof(MapLayerType.Biome),      _grid.transform));
+            _tileMaps.Add(MapLayerType.Tile,       new MapTileMap(nameof(MapLayerType.Tile),       _grid.transform));
+            _tileMaps.Add(MapLayerType.Structure,  new MapTileMap(nameof(MapLayerType.Structure),  _grid.transform));
+            _tileMaps.Add(MapLayerType.LiquidPipe, new MapTileMap(nameof(MapLayerType.LiquidPipe), _grid.transform));
+            _tileMaps.Add(MapLayerType.GasPipe,    new MapTileMap(nameof(MapLayerType.GasPipe),    _grid.transform));
+            _tileMaps.Add(MapLayerType.Wire,       new MapTileMap(nameof(MapLayerType.Wire),       _grid.transform));
+            
+            
         }
         
         
