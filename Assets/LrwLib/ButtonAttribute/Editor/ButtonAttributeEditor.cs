@@ -56,7 +56,7 @@ namespace LrwLib.ButtonAttribute.Editor
             {
                 foreach (var method in type.GetMethods(MethodFlags))
                 {
-                    var buttonAttribute = method.GetCustomAttribute<ButtonAttribute>(true);
+                    var buttonAttribute = method.GetCustomAttribute<UnityButtonAttribute>(true);
                     if (buttonAttribute == null)
                     {
                         continue;
