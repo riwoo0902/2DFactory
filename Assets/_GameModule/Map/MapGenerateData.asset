@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Script._MapSystem._MapGenerator.MapGenerateData
   <MapSizeX>k__BackingField: 500
   <MapSizeY>k__BackingField: 500
-  <BiomeCount>k__BackingField: 50
+  <BiomeCount>k__BackingField: 100
   <BiomeTiles>k__BackingField:
   - {fileID: 11400000, guid: d9ed08ed7abc04947a543e1e3a1af371, type: 2}
   - {fileID: 11400000, guid: 1f7970a88910a31428b02c0bd77f05bb, type: 2}
