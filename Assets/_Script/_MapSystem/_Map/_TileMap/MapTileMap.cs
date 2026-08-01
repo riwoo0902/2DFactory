@@ -1,7 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Script._MapSystem._Map._Tile;
-using UnityEditor;
-using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,18 +11,7 @@ namespace _Script._MapSystem._Map._TileMap
         private readonly Dictionary<Vector3Int, AbstractTile> _tiles;
         
         private readonly Tilemap _tilemap;
-        private readonly Queue<TileMapChangeData> _tileChangeStack;
-        private struct TileMapChangeData
-        {
-            public Tile Tile;
-            public Vector3Int Pos;
-
-            public TileMapChangeData(Vector3Int pos,Tile tile)
-            {
-                Tile = tile;
-                Pos = pos;
-            }
-        }
+        private readonly Dictionary<Vector3Int,TileBase> _tileChangeStack;
         
         public MapTileMap(string name,Transform grid)
         {
@@ -45,16 +33,14 @@ namespace _Script._MapSystem._Map._TileMap
         public void SetTile(Vector3Int position, AbstractTile tile)
         {
             _tiles[position] = tile;
-            _tileChangeStack.Enqueue(new TileMapChangeData(position,tile.TileData.Tile));
+            _tileChangeStack[position] = tile.TileData.Tile;
         }
 
         public void Flush()
         {
-            while (_tileChangeStack.Count > 0)
-            {
-                TileMapChangeData data = _tileChangeStack.Dequeue();
-                _tilemap.SetTile(data.Pos,data.Tile);
-            }
+            Vector3Int[] posArr = _tileChangeStack.Keys.ToArray();
+            TileBase[] tiles =  _tileChangeStack.Values.ToArray();
+            _tilemap.SetTiles(posArr,tiles);
         }
 
         public void Clear()

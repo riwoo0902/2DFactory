@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
@@ -25,6 +26,7 @@ namespace _Script._MapSystem._MapGenerator
             EventBus<MapGenerateEvent>.Event -= MapGenerate;
         }
 
+        private static HashSet<MapGrid> _grids = new();
         private async void MapGenerate(MapGenerateEvent evt)
         {
             try
@@ -33,12 +35,22 @@ namespace _Script._MapSystem._MapGenerator
                 int seed = evt.Seed;
             
                 Debug.Assert(grid != null,"MapGrid is null");
-            
+
+                if (!_grids.Add(grid))
+                {
+                    Debug.LogWarning("This MapGrid is Generating");
+                    return;
+                }
+
                 grid.Clear();
 
                 await Task.Run(() => MapGenerate(grid, seed));
             
                 grid.Flush();
+                
+                _grids.Remove(grid);
+                
+                EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent());
             }
             catch (Exception e)
             {
@@ -64,7 +76,7 @@ namespace _Script._MapSystem._MapGenerator
             
             for (int i = 0; i < biomeCount; i++)
             {
-                Vector3Int pos = new Vector3Int(random.Next(0, mapSize.y), random.Next(0, mapSize.y));
+                Vector3Int pos = new Vector3Int(random.Next(0, mapSize.x), random.Next(0, mapSize.y));
                 TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
                 biomes[i] = new Biome(pos, data);
             }
@@ -79,6 +91,16 @@ namespace _Script._MapSystem._MapGenerator
                     tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
+
+
+            #region DEBUG
+            
+            foreach (Biome biome in biomes)
+            {
+                Debug.Log(biome.Size);
+            }
+
+            #endregion
             
             
             
@@ -96,7 +118,7 @@ namespace _Script._MapSystem._MapGenerator
             foreach (Biome biome in biomes)
             {
                 if(biome == null) continue;
-                float distance = Vector3.Distance(pos,biome.CenterPos);
+                float distance = Vector3.SqrMagnitude(pos - biome.CenterPos);
                 if (distance < minDistance)
                 {
                     minDistance = distance;

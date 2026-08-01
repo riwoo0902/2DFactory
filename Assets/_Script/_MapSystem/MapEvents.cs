@@ -18,4 +18,9 @@ namespace _Script._MapSystem
             Seed = seed;
         }
     }
+    
+    public struct MapGenerateEndEvent : IEvent
+    {
+        
+    }
 }
