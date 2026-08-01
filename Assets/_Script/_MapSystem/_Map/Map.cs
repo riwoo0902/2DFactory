@@ -22,7 +22,6 @@ namespace _Script._MapSystem._Map
             GenerateMap();
         }
         
-        [UnityButton("GenerateMap")]
         private void GenerateMap()
         {
             EventBus<MapGenerateEvent>.Invoke(new MapGenerateEvent(_mapGrid,seed));
