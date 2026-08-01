@@ -23,4 +23,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0bb572d36ea90d489bedf4b35a6a357, type: 2}
   - {fileID: 11400000, guid: 42c6b5afe797d7a49ab250a51b67721f, type: 2}
   - {fileID: 11400000, guid: dc293220bac607e49a1a9d6d909a4642, type: 2}
-  <BiomeMinSize>k__BackingField: 50
+  <BiomeLinePower>k__BackingField: 0.2

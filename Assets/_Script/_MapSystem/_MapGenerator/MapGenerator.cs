@@ -62,8 +62,8 @@ namespace _Script._MapSystem._MapGenerator
         {
             BiomeGenerate(grid.GetTileMap(MapLayerType.Biome),seed);
         }
-
-        private void BiomeGenerate(MapTileMap tileMap,int seed)
+        
+        /*private void BiomeGenerate(MapTileMap tileMap,int seed)
         {
             Debug.Assert(tileMap != null,"BiomeTileMap is null");
             
@@ -92,17 +92,15 @@ namespace _Script._MapSystem._MapGenerator
                     tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
-
-            
-            
         }
-        
 
-        private static Biome GetNearBiome(Vector3Int pos,Biome[] biomes)
+        private Biome GetNearBiome(Vector3Int pos,Biome[] biomes)
         {
             if(biomes == null) return null;
             
             Biome currentBiome = null;
+            
+            float a = Mathf.PerlinNoise(pos.x, pos.y);
             
             float minDistance = float.MaxValue;
             
@@ -118,8 +116,75 @@ namespace _Script._MapSystem._MapGenerator
             }
             
             return currentBiome;
+        }*/
+
+        #region V2
+
+        private static readonly Vector3Int[] Dir =
+        {
+            new Vector3Int(1,1),  new Vector3Int(0,1),  new Vector3Int(-1,1),
+            new Vector3Int(1,0),                        new Vector3Int(-1,0),
+            new Vector3Int(1,-1), new Vector3Int(0,-1), new Vector3Int(-1,-1),
+        };
+        private void BiomeGenerate(MapTileMap tileMap, int seed)
+        {
+            Random random = new Random(seed);
+            
+            List<Biome> biomeList = new List<Biome>();
+            
+            HashSet<Vector3Int> visitedTiles = new HashSet<Vector3Int>();
+            
+            Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
+
+            for (int x = 0; x < mapSize.x; x++)
+            {
+                for (int y = 0; y < mapSize.y; y++)
+                {
+                    Vector3Int currentPos = new Vector3Int(x, y);
+                    
+                    if(!visitedTiles.Add(currentPos)) continue;
+                    
+                    float currentValue = GetPerlinNoise(currentPos);
+
+                    if (Mathf.Abs(currentValue) < mapGenerateData.BiomeLinePower) continue;
+                    
+                    Queue<Vector3Int> queue = new Queue<Vector3Int>();
+                    
+                    queue.Enqueue(currentPos);
+
+                    Biome biome = new Biome(mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)]);
+                    biomeList.Add(biome);
+
+                    while (queue.Count > 0)
+                    {
+                        currentPos = queue.Dequeue();
+                        foreach (var dirVec in Dir)
+                        {
+                            Vector3Int nextPos = currentPos + dirVec;
+                            if(!visitedTiles.Add(nextPos)) continue;
+                            biome.Size += 1;
+                            biome.BiomePositions.Add(nextPos); 
+                            queue.Enqueue(nextPos);
+                        }
+                    }
+                }
+
+                foreach (var biome in biomeList)
+                {
+                    foreach (var pos in biome.BiomePositions)
+                    {
+                        tileMap.SetTile(pos,new BiomeTile(biome.Data));
+                    }
+                }
+                
+            }
+            
         }
-        
+
+        private static float GetPerlinNoise(Vector3Int pos)
+            => Mathf.PerlinNoise(pos.x, pos.y) * 2 - 1;
+
+        #endregion
         
     }
 }
