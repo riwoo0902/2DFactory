@@ -220,7 +220,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eebb15ccaba541fa83d654cb4c9ac837, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Script._Map.Map
+  m_EditorClassIdentifier: Assembly-CSharp::_Script._MapSystem._Map.Map
   seed: 0
 --- !u!1 &519420028
 GameObject:

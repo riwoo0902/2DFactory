@@ -88,20 +88,11 @@ namespace _Script._MapSystem._MapGenerator
                     Vector3Int pos = new Vector3Int(x, y);
                     Biome biome = GetNearBiome(pos, biomes);
                     biome.Size += 1;
+                    biome.BiomePositions.Add(pos);
                     tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
 
-
-            #region DEBUG
-            
-            foreach (Biome biome in biomes)
-            {
-                Debug.Log(biome.Size);
-            }
-
-            #endregion
-            
             
             
         }
