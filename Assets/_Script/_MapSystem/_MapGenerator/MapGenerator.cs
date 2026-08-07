@@ -223,7 +223,8 @@ namespace _Script._MapSystem._MapGenerator
                 for (int y = 0; y < biomeCount.y; y++)
                 {
                     Vector3Int noise = new Vector3Int(random.Next(0, mapGenerateData.BiomeCenterNoisePower), random.Next(0, mapGenerateData.BiomeCenterNoisePower));
-                    Vector3Int pos  = new Vector3Int(x * biomeSize,y * biomeSize) + noise;
+                    Vector3Int pos = GetBiomePos(x,y,biomeSize) + noise;
+                    if(!CheckInMap(pos)) continue;
                     TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
                     biomes.Add(new Biome(data,pos));
                 }
@@ -242,14 +243,19 @@ namespace _Script._MapSystem._MapGenerator
                 }
             }
         }
+
+        private static Vector3Int GetBiomePos(int xCount, int yCount, int size)
+        {
+            int radius = size / 2;
+            int xOffset = yCount % 2 == 0 ? radius : size;
+            return new Vector3Int(xCount * size + xOffset, yCount * size + radius);
+        }
         
-        private Biome GetNearBiome(Vector3Int pos,List<Biome> biomes)
+        private static Biome GetNearBiome(Vector3Int pos,List<Biome> biomes)
         {
             if(biomes == null) return null;
             
             Biome currentBiome = null;
-            
-            float a = Mathf.PerlinNoise(pos.x, pos.y);
             
             float minDistance = float.MaxValue;
             
@@ -266,13 +272,11 @@ namespace _Script._MapSystem._MapGenerator
             
             return currentBiome;
         }
-
-        #endregion
         
-        #region Helper
         private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
 
         #endregion
+        
         
     }
 }
