@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
+using _Script._MapSystem._Map._Tile;
 using _Script._MapSystem._Map._Tile._Tiles;
 using _Script._MapSystem._Map._TileMap;
 using _Script._MapSystem._MapGenerator._Biome;
@@ -65,10 +66,13 @@ namespace _Script._MapSystem._MapGenerator
 
         private void MapGenerate(MapGrid grid, int seed)
         {
-            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome),seed);
+            BiomeGenerateV3(grid.GetTileMap(MapLayerType.Biome),seed);
         }
+
+        #region V1
         
-        /*private void BiomeGenerate(MapTileMap tileMap,int seed)
+        /*
+        private void BiomeGenerate(MapTileMap tileMap,int seed)
         {
             Debug.Assert(tileMap != null,"BiomeTileMap is null");
             
@@ -121,17 +125,20 @@ namespace _Script._MapSystem._MapGenerator
             }
             
             return currentBiome;
-        }*/
+        }
+         */
+
+        #endregion
 
         #region V2
 
-        private static readonly Vector3Int[] Dir =
+        /*private static readonly Vector3Int[] Dir =
         {
             new Vector3Int(1,1),  new Vector3Int(0,1),  new Vector3Int(-1,1),
             new Vector3Int(1,0),                        new Vector3Int(-1,0),
             new Vector3Int(1,-1), new Vector3Int(0,-1), new Vector3Int(-1,-1),
         };
-        private void BiomeGenerate(MapTileMap tileMap, int seed)
+        private void BiomeGenerateV2(MapTileMap tileMap, int seed)
         {
             Random random = new Random(seed);
             
@@ -187,13 +194,82 @@ namespace _Script._MapSystem._MapGenerator
                     tileMap.SetTile(pos,new BiomeTile(biome.Data));
                 }
             }
-            
-            
         }
 
-        private static float GetPerlinNoise(Vector3Int pos,int seed)
-            => Mathf.PerlinNoise(pos.x + seed, pos.y + seed) * 2 - 1;
+        private float GetPerlinNoise(Vector3Int pos, int seed)
+        {
+            float frequency = mapGenerateData.NoiseFrequency;
+            return Mathf.PerlinNoise(pos.x * frequency + seed, pos.y * frequency + seed) * 2 - 1;
+        }*/
         
+        #endregion
+
+
+        #region V3
+
+        private void BiomeGenerateV3(MapTileMap tileMap, int seed)
+        {
+            Debug.Assert(tileMap != null,"BiomeTileMap is null");
+            
+            Random random = new Random(seed);
+            
+            int biomeSize = mapGenerateData.BiomeSize;
+            List<Biome> biomes = new List<Biome>();
+            
+            Vector2Int biomeCount = new Vector2Int(mapGenerateData.MapSizeX / biomeSize, mapGenerateData.MapSizeY / biomeSize);
+            
+            for (int x = 0; x < biomeCount.x; x++)
+            {
+                for (int y = 0; y < biomeCount.y; y++)
+                {
+                    Vector3Int noise = new Vector3Int(random.Next(0, mapGenerateData.BiomeCenterNoisePower), random.Next(0, mapGenerateData.BiomeCenterNoisePower));
+                    Vector3Int pos  = new Vector3Int(x * biomeSize,y * biomeSize) + noise;
+                    TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
+                    biomes.Add(new Biome(data,pos));
+                }
+            }
+            
+            Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
+            
+            for (int x = 0; x < mapSize.x; x++)
+            {
+                for (int y = 0; y < mapSize.y; y++)
+                {
+                    Vector3Int pos = new Vector3Int(x, y);
+                    Biome biome = GetNearBiome(pos, biomes);
+                    biome.Size += 1;
+                    tileMap.SetTile(pos, new BiomeTile(biome.Data));
+                }
+            }
+        }
+        
+        private Biome GetNearBiome(Vector3Int pos,List<Biome> biomes)
+        {
+            if(biomes == null) return null;
+            
+            Biome currentBiome = null;
+            
+            float a = Mathf.PerlinNoise(pos.x, pos.y);
+            
+            float minDistance = float.MaxValue;
+            
+            foreach (Biome biome in biomes)
+            {
+                if(biome == null) continue;
+                float distance = Vector3.SqrMagnitude(pos - biome.CenterPos);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    currentBiome = biome;
+                }
+            }
+            
+            return currentBiome;
+        }
+
+        #endregion
+        
+        #region Helper
         private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
 
         #endregion

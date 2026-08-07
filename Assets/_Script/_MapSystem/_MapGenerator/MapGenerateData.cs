@@ -9,16 +9,17 @@ namespace _Script._MapSystem._MapGenerator
         [Header("MapSize")]
         [field:SerializeField] public int MapSizeX { get; private set; }
         [field:SerializeField] public int MapSizeY { get; private set; }
-        
+
         [Header("BiomeSetting")]
-        [field:SerializeField] public int BiomeCount { get; private set; }
+        [field: SerializeField]
+        public int BiomeSize { get; private set; } = 50;
 
         [field: SerializeField] public TileData[] BiomeTiles { get; private set; }
         
         [field:SerializeField] public float BiomeLinePower { get; private set; } = 0.5f;
         
-        
-        
+        [field: SerializeField] public int BiomeCenterNoisePower { get; private set; } = 30;
+
 
     }
 }

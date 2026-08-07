@@ -8,13 +8,13 @@ namespace _Script._MapSystem._MapGenerator._Biome
     {
         public int Size;
         public readonly TileData Data;
-        public readonly List<Vector3Int> BiomePositions;
+        public readonly Vector3Int CenterPos;
         
-        public Biome(TileData data)
+        public Biome(TileData data,Vector3Int centerPos)
         {
             Data = data;
             Size = 0;
-            BiomePositions = new();
+            CenterPos = centerPos;
         }
         
     }
