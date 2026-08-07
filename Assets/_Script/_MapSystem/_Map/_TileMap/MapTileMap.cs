@@ -48,6 +48,7 @@ namespace _Script._MapSystem._Map._TileMap
             _tiles.Clear();
             _tileChangeStack.Clear();
             _tilemap.ClearAllTiles();
+            _tilemap.CompressBounds();
         }
         
     }

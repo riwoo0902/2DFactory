@@ -49,169 +49,33 @@ namespace _Script._MapSystem._MapGenerator
                 await Task.Run(() => MapGenerate(grid, seed));
 
                 grid.Flush();
-
-                _grids.Remove(grid);
-
+                
+                _grids.Remove(evt.MapGrid);
+                
+                Debug.Log("MapGenerate End");
+                
                 EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent());
+                
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
-            }
-            finally
-            {
-                Debug.Log("MapGenerate End");
+                Debug.LogError("[MapGenerate] " + e.Message);
             }
         }
 
         private void MapGenerate(MapGrid grid, int seed)
         {
-            BiomeGenerateV3(grid.GetTileMap(MapLayerType.Biome),seed);
+            Random random = new Random(seed);
+            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome),random);
+            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome),grid.GetTileMap(MapLayerType.Tile),random);
         }
-
-        #region V1
         
-        /*
-        private void BiomeGenerate(MapTileMap tileMap,int seed)
+        #region Biome
+
+        private void BiomeGenerate(MapTileMap tileMap, Random random)
         {
-            Debug.Assert(tileMap != null,"BiomeTileMap is null");
-            
-            Random random = new Random(seed);
-            
-            int biomeCount = mapGenerateData.BiomeCount;
-            Biome[] biomes = new Biome[biomeCount];
-            
-            Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
-            
-            for (int i = 0; i < biomeCount; i++)
-            {
-                Vector3Int pos = new Vector3Int(random.Next(0, mapSize.x), random.Next(0, mapSize.y));
-                TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
-                biomes[i] = new Biome(pos, data);
-            }
-            
-            for (int x = 0; x < mapSize.x; x++)
-            {
-                for (int y = 0; y < mapSize.y; y++)
-                {
-                    Vector3Int pos = new Vector3Int(x, y);
-                    Biome biome = GetNearBiome(pos, biomes);
-                    biome.Size += 1;
-                    biome.BiomePositions.Add(pos);
-                    tileMap.SetTile(pos, new BiomeTile(biome.Data));
-                }
-            }
-        }
-
-        private Biome GetNearBiome(Vector3Int pos,Biome[] biomes)
-        {
-            if(biomes == null) return null;
-            
-            Biome currentBiome = null;
-            
-            float a = Mathf.PerlinNoise(pos.x, pos.y);
-            
-            float minDistance = float.MaxValue;
-            
-            foreach (Biome biome in biomes)
-            {
-                if(biome == null) continue;
-                float distance = Vector3.SqrMagnitude(pos - biome.CenterPos);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    currentBiome = biome;
-                }
-            }
-            
-            return currentBiome;
-        }
-         */
-
-        #endregion
-
-        #region V2
-
-        /*private static readonly Vector3Int[] Dir =
-        {
-            new Vector3Int(1,1),  new Vector3Int(0,1),  new Vector3Int(-1,1),
-            new Vector3Int(1,0),                        new Vector3Int(-1,0),
-            new Vector3Int(1,-1), new Vector3Int(0,-1), new Vector3Int(-1,-1),
-        };
-        private void BiomeGenerateV2(MapTileMap tileMap, int seed)
-        {
-            Random random = new Random(seed);
-            
-            List<Biome> biomeList = new List<Biome>();
-            
-            HashSet<Vector3Int> visitedTiles = new HashSet<Vector3Int>();
-            
-            Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
-
-            for (int x = 0; x < mapSize.x; x++)
-            {
-                for (int y = 0; y < mapSize.y; y++)
-                {
-                    Vector3Int currentPos = new Vector3Int(x, y);
-                    
-                    if(!visitedTiles.Add(currentPos)) continue;
-                    
-                    float currentValue = GetPerlinNoise(currentPos,seed);
-
-                    if (Mathf.Abs(currentValue) < mapGenerateData.BiomeLinePower) continue;
-                    
-                    Queue<Vector3Int> queue = new Queue<Vector3Int>();
-                    
-                    queue.Enqueue(currentPos);
-
-                    Biome biome = new Biome(mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)]);
-                    biome.Size += 1;
-                    biome.BiomePositions.Add(currentPos); 
-                    
-                    biomeList.Add(biome);
-
-                    while (queue.Count > 0)
-                    {
-                        currentPos = queue.Dequeue();
-                        foreach (var dirVec in Dir)
-                        {
-                            Vector3Int nextPos = currentPos + dirVec;
-                            if(!visitedTiles.Add(nextPos)) continue;
-                            if(!CheckInMap(nextPos)) continue;
-                            if (Mathf.Abs( GetPerlinNoise(nextPos, seed)) < mapGenerateData.BiomeLinePower) continue;
-                            biome.Size += 1;
-                            biome.BiomePositions.Add(nextPos); 
-                            queue.Enqueue(nextPos);
-                        }
-                    }
-                }
-            }
-            
-            foreach (var biome in biomeList)
-            {
-                foreach (var pos in biome.BiomePositions)
-                {
-                    tileMap.SetTile(pos,new BiomeTile(biome.Data));
-                }
-            }
-        }
-
-        private float GetPerlinNoise(Vector3Int pos, int seed)
-        {
-            float frequency = mapGenerateData.NoiseFrequency;
-            return Mathf.PerlinNoise(pos.x * frequency + seed, pos.y * frequency + seed) * 2 - 1;
-        }*/
-        
-        #endregion
-
-
-        #region V3
-
-        private void BiomeGenerateV3(MapTileMap tileMap, int seed)
-        {
-            Debug.Assert(tileMap != null,"BiomeTileMap is null");
-            
-            Random random = new Random(seed);
+            if(tileMap == null) throw new Exception("BiomeTileMap is null");
+            if(random == null) throw new Exception("Random is null");
             
             int biomeSize = mapGenerateData.BiomeSize;
             List<Biome> biomes = new List<Biome>();
@@ -273,10 +137,73 @@ namespace _Script._MapSystem._MapGenerator
             return currentBiome;
         }
         
-        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
+        
+        private static readonly Vector3Int[] Dir4 = { new(1,0), new(-1,0), new(0,1), new(0,-1) };
+        
+        private void BiomeOutLineGenerate(MapTileMap biomeMap,MapTileMap tileMap, Random seed)
+        {
+            Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
+            
+            List<Vector3Int> outLineList = new List<Vector3Int>();
+            
+            for (int x = 0; x < mapSize.x; x++)
+            {
+                for (int y = 0; y < mapSize.y; y++)
+                {
+                    Vector3Int pos = new Vector3Int(x, y);
+                    if(!biomeMap.TryGetTile(pos,out AbstractTile currentTile)) continue;
+                    
+                    bool outLine = false;
+                    foreach (var dir in Dir4)
+                    {
+                        Vector3Int nextPos = pos + dir;
+                        if(!biomeMap.TryGetTile(nextPos,out AbstractTile nextTile)) continue;
+                        if (currentTile.TileData == nextTile.TileData) continue;
+                        outLine = true;
+                        break;
+                    }
 
+                    if (outLine) outLineList.Add(pos);
+                }
+            }
+
+            List<Vector3Int> posList = new();
+            foreach (Vector3Int outLinePos in outLineList)
+            {
+                foreach (Vector3Int pos in GetPosList(outLinePos,mapGenerateData.BiomeOutLinePower,posList))
+                {
+                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile));
+                }
+            }
+        }
+
+        private static List<Vector3Int> GetPosList(Vector3Int center, int radius,List<Vector3Int> list = null)
+        {
+            if(list == null) list = new List<Vector3Int>();
+            else list.Clear();
+            
+            int radiusSquared = radius * radius;
+
+            for (int x = -radius; x <= radius; x++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    if (x * x + y * y <= radiusSquared)
+                    {
+                        list.Add(new Vector3Int(
+                            center.x + x,
+                            center.y + y,
+                            center.z
+                        ));
+                    }
+                }
+            }
+            
+            return list;
+        }
+        
         #endregion
         
-        
+        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
     }
 }
