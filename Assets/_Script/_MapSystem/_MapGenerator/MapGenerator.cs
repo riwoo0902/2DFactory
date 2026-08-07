@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
-using _Script._MapSystem._Map._Tile;
 using _Script._MapSystem._Map._Tile._Tiles;
 using _Script._MapSystem._Map._TileMap;
 using _Script._MapSystem._MapGenerator._Biome;
@@ -31,10 +30,12 @@ namespace _Script._MapSystem._MapGenerator
         {
             try
             {
+                Debug.Log("MapGenerate Start");
+                
                 MapGrid grid = evt.MapGrid;
                 int seed = evt.Seed;
-            
-                Debug.Assert(grid != null,"MapGrid is null");
+
+                Debug.Assert(grid != null, "MapGrid is null");
 
                 if (!_grids.Add(grid))
                 {
@@ -45,16 +46,20 @@ namespace _Script._MapSystem._MapGenerator
                 grid.Clear();
 
                 await Task.Run(() => MapGenerate(grid, seed));
-            
+
                 grid.Flush();
-                
+
                 _grids.Remove(grid);
-                
+
                 EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent());
             }
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
+            }
+            finally
+            {
+                Debug.Log("MapGenerate End");
             }
         }
 
@@ -144,7 +149,7 @@ namespace _Script._MapSystem._MapGenerator
                     
                     if(!visitedTiles.Add(currentPos)) continue;
                     
-                    float currentValue = GetPerlinNoise(currentPos);
+                    float currentValue = GetPerlinNoise(currentPos,seed);
 
                     if (Mathf.Abs(currentValue) < mapGenerateData.BiomeLinePower) continue;
                     
@@ -153,6 +158,9 @@ namespace _Script._MapSystem._MapGenerator
                     queue.Enqueue(currentPos);
 
                     Biome biome = new Biome(mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)]);
+                    biome.Size += 1;
+                    biome.BiomePositions.Add(currentPos); 
+                    
                     biomeList.Add(biome);
 
                     while (queue.Count > 0)
@@ -162,27 +170,31 @@ namespace _Script._MapSystem._MapGenerator
                         {
                             Vector3Int nextPos = currentPos + dirVec;
                             if(!visitedTiles.Add(nextPos)) continue;
+                            if(!CheckInMap(nextPos)) continue;
+                            if (Mathf.Abs( GetPerlinNoise(nextPos, seed)) < mapGenerateData.BiomeLinePower) continue;
                             biome.Size += 1;
                             biome.BiomePositions.Add(nextPos); 
                             queue.Enqueue(nextPos);
                         }
                     }
                 }
-
-                foreach (var biome in biomeList)
-                {
-                    foreach (var pos in biome.BiomePositions)
-                    {
-                        tileMap.SetTile(pos,new BiomeTile(biome.Data));
-                    }
-                }
-                
             }
+            
+            foreach (var biome in biomeList)
+            {
+                foreach (var pos in biome.BiomePositions)
+                {
+                    tileMap.SetTile(pos,new BiomeTile(biome.Data));
+                }
+            }
+            
             
         }
 
-        private static float GetPerlinNoise(Vector3Int pos)
-            => Mathf.PerlinNoise(pos.x, pos.y) * 2 - 1;
+        private static float GetPerlinNoise(Vector3Int pos,int seed)
+            => Mathf.PerlinNoise(pos.x + seed, pos.y + seed) * 2 - 1;
+        
+        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
 
         #endregion
         
