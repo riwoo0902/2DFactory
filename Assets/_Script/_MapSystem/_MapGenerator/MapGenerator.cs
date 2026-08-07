@@ -103,7 +103,7 @@ namespace _Script._MapSystem._MapGenerator
                     Vector3Int pos = new Vector3Int(x, y);
                     Biome biome = GetNearBiome(pos, biomes);
                     biome.Size += 1;
-                    tileMap.SetTile(pos, new BiomeTile(biome.Data));
+                    tileMap.SetTile(pos, new BiomeTile(biome.Data),FlushType.Wait);
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace _Script._MapSystem._MapGenerator
             {
                 foreach (Vector3Int pos in GetPosList(outLinePos,mapGenerateData.BiomeOutLinePower,posList))
                 {
-                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile));
+                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile),FlushType.Wait);
                 }
             }
         }

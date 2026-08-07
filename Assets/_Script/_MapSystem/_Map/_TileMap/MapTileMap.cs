@@ -30,11 +30,12 @@ namespace _Script._MapSystem._Map._TileMap
         }
         
         public bool HasTile(Vector3Int position) => _tiles.ContainsKey(position);
-
-        public void SetTile(Vector3Int position, AbstractTile tile)
+        
+        public void SetTile(Vector3Int position, AbstractTile tile,FlushType flushType)
         {
             _tiles[position] = tile;
             _tileChangeStack[position] = tile.TileData.Tile;
+            if (flushType == FlushType.Now) Flush();
         }
 
         public void Flush()
@@ -53,6 +54,9 @@ namespace _Script._MapSystem._Map._TileMap
         }
         
     }
-    
-    
+
+    public enum FlushType
+    {
+        Wait,Now
+    }
 }
