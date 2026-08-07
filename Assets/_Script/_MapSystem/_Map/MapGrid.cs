@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Script._Core;
 using _Script._MapSystem._Map._TileMap;
+using _Script._MapSystem._Map._TileMap._TileMaps;
 using UnityEngine;
 
 namespace _Script._MapSystem._Map
@@ -17,7 +18,7 @@ namespace _Script._MapSystem._Map
             _tileMaps = new();
             
             _tileMaps.Add(MapLayerType.Biome,      new MapTileMap(nameof(MapLayerType.Biome),      _grid.transform));
-            _tileMaps.Add(MapLayerType.Tile,       new MapTileMap(nameof(MapLayerType.Tile),       _grid.transform));
+            _tileMaps.Add(MapLayerType.Tile,       new ColliderTileMap(nameof(MapLayerType.Tile),       _grid.transform));
             _tileMaps.Add(MapLayerType.Structure,  new MapTileMap(nameof(MapLayerType.Structure),  _grid.transform));
             _tileMaps.Add(MapLayerType.LiquidPipe, new MapTileMap(nameof(MapLayerType.LiquidPipe), _grid.transform));
             _tileMaps.Add(MapLayerType.GasPipe,    new MapTileMap(nameof(MapLayerType.GasPipe),    _grid.transform));

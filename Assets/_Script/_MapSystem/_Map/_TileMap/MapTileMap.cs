@@ -13,12 +13,13 @@ namespace _Script._MapSystem._Map._TileMap
         private readonly Tilemap _tilemap;
         private readonly Dictionary<Vector3Int,TileBase> _tileChangeStack;
         
+        protected readonly GameObject GameObject;
         public MapTileMap(string name,Transform grid)
         {
             _tiles = new();
-            GameObject go = new GameObject(name,typeof(Tilemap),typeof(TilemapRenderer));
-            go.transform.SetParent(grid.transform);
-            _tilemap = go.GetComponent<Tilemap>();
+            GameObject = new GameObject(name,typeof(Tilemap),typeof(TilemapRenderer));
+            GameObject.transform.SetParent(grid.transform);
+            _tilemap = GameObject.GetComponent<Tilemap>();
             
             _tileChangeStack = new();
         }

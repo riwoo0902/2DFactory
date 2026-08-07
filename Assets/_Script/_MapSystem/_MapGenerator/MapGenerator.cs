@@ -177,7 +177,7 @@ namespace _Script._MapSystem._MapGenerator
             }
         }
 
-        private static List<Vector3Int> GetPosList(Vector3Int center, int radius,List<Vector3Int> list = null)
+        private List<Vector3Int> GetPosList(Vector3Int center, int radius,List<Vector3Int> list = null)
         {
             if(list == null) list = new List<Vector3Int>();
             else list.Clear();
@@ -190,11 +190,13 @@ namespace _Script._MapSystem._MapGenerator
                 {
                     if (x * x + y * y <= radiusSquared)
                     {
-                        list.Add(new Vector3Int(
+                        Vector3Int pos = new Vector3Int(
                             center.x + x,
                             center.y + y,
                             center.z
-                        ));
+                        );
+                        if(!CheckInMap(pos)) continue;
+                        list.Add(pos);
                     }
                 }
             }
@@ -204,6 +206,6 @@ namespace _Script._MapSystem._MapGenerator
         
         #endregion
         
-        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x <= mapGenerateData.MapSizeX && 0 <= pos.y && pos.y <= mapGenerateData.MapSizeY);
+        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x < mapGenerateData.MapSizeX && 0 <= pos.y && pos.y < mapGenerateData.MapSizeY);
     }
 }
