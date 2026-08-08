@@ -5,7 +5,7 @@ namespace _Script._MapSystem._Map._TileMap._TileMaps
 {
     public class ColliderTileMap : MapTileMap
     {
-        public ColliderTileMap(string name, Transform grid) : base(name, grid)
+        public ColliderTileMap(string name, Transform grid,int sortingOrder = 0) : base(name, grid,sortingOrder)
         {
             GameObject.AddComponent<TilemapCollider2D>().compositeOperation = Collider2D.CompositeOperation.Merge;
             GameObject.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;

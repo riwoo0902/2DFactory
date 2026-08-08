@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 namespace _Script._MapSystem._Map._TileMap
 {
-    public class MapTileMap
+    public class MapTileMap : ITileMap,IFlush
     {
         private readonly Dictionary<Vector3Int, AbstractTile> _tiles;
         
@@ -14,13 +14,13 @@ namespace _Script._MapSystem._Map._TileMap
         private readonly Dictionary<Vector3Int,TileBase> _tileChangeStack;
         
         protected readonly GameObject GameObject;
-        public MapTileMap(string name,Transform grid)
+        public MapTileMap(string name,Transform grid,int sortingOrder = 0)
         {
             _tiles = new();
             GameObject = new GameObject(name,typeof(Tilemap),typeof(TilemapRenderer));
             GameObject.transform.SetParent(grid.transform);
             _tilemap = GameObject.GetComponent<Tilemap>();
-            
+            GameObject.GetComponent<TilemapRenderer>().sortingOrder = sortingOrder;
             _tileChangeStack = new();
         }
         
@@ -31,17 +31,16 @@ namespace _Script._MapSystem._Map._TileMap
         
         public bool HasTile(Vector3Int position) => _tiles.ContainsKey(position);
         
-        public void SetTile(Vector3Int position, AbstractTile tile,FlushType flushType)
+        public void SetTile(Vector3Int position, AbstractTile tile)
         {
             _tiles[position] = tile;
             _tileChangeStack[position] = tile.TileData.Tile;
-            if (flushType == FlushType.Now) Flush();
         }
 
         public void Flush()
         {
             Vector3Int[] posArr = _tileChangeStack.Keys.ToArray();
-            TileBase[] tiles =  _tileChangeStack.Values.ToArray();
+            TileBase[] tiles = _tileChangeStack.Values.ToArray();
             _tilemap.SetTiles(posArr,tiles);
         }
 
@@ -53,10 +52,5 @@ namespace _Script._MapSystem._Map._TileMap
             _tilemap.CompressBounds();
         }
         
-    }
-
-    public enum FlushType
-    {
-        Wait,Now
     }
 }

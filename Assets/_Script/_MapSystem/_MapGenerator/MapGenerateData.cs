@@ -1,5 +1,4 @@
 using _Script._MapSystem._Map._Tile;
-using _Script._MapSystem._Map._Tile._Tiles;
 using UnityEngine;
 
 namespace _Script._MapSystem._MapGenerator
@@ -17,9 +16,7 @@ namespace _Script._MapSystem._MapGenerator
         [field: SerializeField] public int BiomeCenterNoisePower { get; private set; } = 30;
         
         [Header("BiomeOutLine")]
-        
         [field: SerializeField] public int BiomeOutLinePower { get; private set; } = 3;
-        
         [field: SerializeField] public TileData BiomeOutLineTile { get; private set; }
         
 

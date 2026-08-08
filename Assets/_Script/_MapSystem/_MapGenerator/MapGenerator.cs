@@ -54,7 +54,7 @@ namespace _Script._MapSystem._MapGenerator
                 
                 Debug.Log("MapGenerate End");
                 
-                EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent());
+                EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent(grid));
                 
             }
             catch (Exception e)
@@ -66,8 +66,8 @@ namespace _Script._MapSystem._MapGenerator
         private void MapGenerate(MapGrid grid, int seed)
         {
             Random random = new Random(seed);
-            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome),random);
-            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome),grid.GetTileMap(MapLayerType.Tile),random);
+            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap, random);
+            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap,grid.GetTileMap(MapLayerType.Tile) as MapTileMap,random);
         }
         
         #region Biome
@@ -103,7 +103,7 @@ namespace _Script._MapSystem._MapGenerator
                     Vector3Int pos = new Vector3Int(x, y);
                     Biome biome = GetNearBiome(pos, biomes);
                     biome.Size += 1;
-                    tileMap.SetTile(pos, new BiomeTile(biome.Data),FlushType.Wait);
+                    tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
         }
@@ -142,6 +142,9 @@ namespace _Script._MapSystem._MapGenerator
         
         private void BiomeOutLineGenerate(MapTileMap biomeMap,MapTileMap tileMap, Random seed)
         {
+            if(biomeMap == null) throw new Exception("BiomeTileMap is null");
+            if(tileMap == null) throw new Exception("TileTileMap is null");
+            
             Vector2Int mapSize = new Vector2Int(mapGenerateData.MapSizeX, mapGenerateData.MapSizeY);
             
             List<Vector3Int> outLineList = new List<Vector3Int>();
@@ -172,7 +175,7 @@ namespace _Script._MapSystem._MapGenerator
             {
                 foreach (Vector3Int pos in GetPosList(outLinePos,mapGenerateData.BiomeOutLinePower,posList))
                 {
-                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile),FlushType.Wait);
+                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile));
                 }
             }
         }
