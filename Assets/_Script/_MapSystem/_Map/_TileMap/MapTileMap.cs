@@ -41,7 +41,7 @@ namespace _Script._MapSystem._Map._TileMap
         public void Flush()
         {
             Vector3Int[] posArr = _tileChangeStack.Keys.ToArray();
-            TileBase[] tiles =  _tileChangeStack.Values.ToArray();
+            TileBase[] tiles = _tileChangeStack.Values.ToArray();
             _tilemap.SetTiles(posArr,tiles);
         }
 

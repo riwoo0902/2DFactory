@@ -54,7 +54,7 @@ namespace _Script._MapSystem._MapGenerator
                 
                 Debug.Log("MapGenerate End");
                 
-                EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent());
+                EventBus<MapGenerateEndEvent>.Invoke(new MapGenerateEndEvent(grid));
                 
             }
             catch (Exception e)

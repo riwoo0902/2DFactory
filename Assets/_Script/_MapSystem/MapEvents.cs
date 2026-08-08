@@ -21,6 +21,10 @@ namespace _Script._MapSystem
     
     public struct MapGenerateEndEvent : IEvent
     {
-        
+        public readonly MapGrid MapGrid;
+        public MapGenerateEndEvent(MapGrid mapGrid)
+        {
+            MapGrid = mapGrid;
+        }
     }
 }
