@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace _Script._Core._FSM
 {
-    public class StateMachine<T>
+    public class StateMachine<TK>
     {
-        private Dictionary<T,IState> _states = new();
+        private Dictionary<TK,IState> _states = new();
         
         private IState _currentState;
         
-        public void AddState(T key, IState state)
+        public void AddState(TK key, IState state)
         {
             if (!_states.TryAdd(key, state))
             {
@@ -18,14 +18,14 @@ namespace _Script._Core._FSM
             }
         }
 
-        public void ChangeState(T key)
+        public void ChangeState(TK key)
         {
             _currentState?.Exit();
             _currentState = GetState(key);
             _currentState?.Enter();
         }
 
-        private IState GetState(T key)
+        private IState GetState(TK key)
         {
             if (key == null)
             {
@@ -41,7 +41,7 @@ namespace _Script._Core._FSM
         }
 
         public IState[] GetStates() => _states.Values.ToArray();
-        public T[] GetKeys() => _states.Keys.ToArray();
+        public TK[] GetKeys() => _states.Keys.ToArray();
         public void Update()
         {
             _currentState?.StateUpdate();

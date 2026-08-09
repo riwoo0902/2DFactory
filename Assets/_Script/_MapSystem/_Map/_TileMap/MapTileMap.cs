@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Script._MapSystem._Map._Tile;
@@ -10,7 +11,7 @@ namespace _Script._MapSystem._Map._TileMap
     {
         private readonly Dictionary<Vector3Int, AbstractTile> _tiles;
         
-        private readonly Tilemap _tilemap;
+        public readonly Tilemap Tilemap;
         private readonly Dictionary<Vector3Int,TileBase> _tileChangeStack;
         
         protected readonly GameObject GameObject;
@@ -19,7 +20,7 @@ namespace _Script._MapSystem._Map._TileMap
             _tiles = new();
             GameObject = new GameObject(name,typeof(Tilemap),typeof(TilemapRenderer));
             GameObject.transform.SetParent(grid.transform);
-            _tilemap = GameObject.GetComponent<Tilemap>();
+            Tilemap = GameObject.GetComponent<Tilemap>();
             GameObject.GetComponent<TilemapRenderer>().sortingOrder = sortingOrder;
             _tileChangeStack = new();
         }
@@ -36,20 +37,23 @@ namespace _Script._MapSystem._Map._TileMap
             _tiles[position] = tile;
             _tileChangeStack[position] = tile.TileData.Tile;
         }
-
+        
         public void Flush()
         {
             Vector3Int[] posArr = _tileChangeStack.Keys.ToArray();
             TileBase[] tiles = _tileChangeStack.Values.ToArray();
-            _tilemap.SetTiles(posArr,tiles);
+            Tilemap.SetTiles(posArr,tiles);
+            OnFlush?.Invoke(posArr);
         }
+
+        public event Action<Vector3Int[]> OnFlush;
 
         public void Clear()
         {
             _tiles.Clear();
             _tileChangeStack.Clear();
-            _tilemap.ClearAllTiles();
-            _tilemap.CompressBounds();
+            Tilemap.ClearAllTiles();
+            Tilemap.CompressBounds();
         }
         
     }

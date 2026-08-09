@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using _Script._Core;
 using _Script._MapSystem._Map._Tile;
 using _Script._MapSystem._Map._Tile._Tiles._GameTiles;
 using UnityEngine;
@@ -11,31 +13,58 @@ namespace _Script._MapSystem._Map._TileMap._TileMaps
     {
         private readonly Dictionary<Vector3Int, AbstractTile> _tiles;
         
-        private readonly MapTileMap[] _tilemaps;
-        private readonly Dictionary<Vector3Int,TileBase> _tileChangeStack;
-        
+        private readonly ITileMap[] _tilemaps;
+        private readonly Dictionary<Vector3Int,AbstractTile>[] _tileChangeStack;
+
+        private const int TileMapCount = 3;
 
         public MultiTileMap(string name,Transform grid,int sortingOrder = 0)
         {
+            GameObject go = new GameObject(name);
+            go.transform.SetParent(grid);
+            
             _tiles = new();
-            _tilemaps = new MapTileMap[3];
+            
+            _tilemaps = new ITileMap[TileMapCount];
+            _tilemaps[0] = new ColliderTileMap("Object",go.transform,sortingOrder);
+            _tilemaps[1] = new MapTileMap("Water",go.transform,sortingOrder);
+            _tilemaps[2] = new MapTileMap("Air",go.transform,sortingOrder);
+
+            _tileChangeStack = new Dictionary<Vector3Int, AbstractTile>[3];
+            
+            for(int i = 0;i < TileMapCount;i++) _tileChangeStack[i] = new Dictionary<Vector3Int, AbstractTile>();
             
         }
         
         public bool TryGetTile(Vector3Int position, out AbstractTile tile) 
             => _tiles.TryGetValue(position,out tile);
+
+        public ITileMap GetTileMap(int index)
+        {
+            if(0 > index || index >= TileMapCount) throw new IndexOutOfRangeException();
+            return _tilemaps[index];
+        }
         
         public bool HasTile(Vector3Int position) 
             => _tiles.ContainsKey(position);
+
+        private void RemoveTile(Vector3Int position)
+        {
+            if (!_tiles.TryGetValue(position, out var tile)) return;
+            int index = GetTileIndex(tile);
+            _tileChangeStack[index].Remove(position);
+            _tiles.Remove(position);
+        }
         
         public void SetTile(Vector3Int position, AbstractTile tile)
         {
+            RemoveTile(position);
             int index = GetTileIndex(tile);
             
             if(index == -1) return;
             
             _tiles[position] = tile;
-            _tileChangeStack[new Vector3Int(position.x,position.y,index)] = tile.TileData.Tile;
+            _tileChangeStack[index][position] = tile;
         }
 
         private int GetTileIndex(AbstractTile tile)
@@ -53,14 +82,29 @@ namespace _Script._MapSystem._Map._TileMap._TileMaps
         
         public void Flush()
         {
-            
+            for (int i = 0; i < TileMapCount; i++)
+            {
+                IFlush flush = _tilemaps[i] as IFlush;
+                if(flush == null) continue;
+                var dict = _tileChangeStack[i];
+
+                var keys = dict.Keys.ToArray();
+                foreach (var key in keys)
+                {
+                    _tilemaps[i].SetTile(key,dict[key]);
+                }
+                flush.Flush();
+                OnFlush?.Invoke(keys);
+            }
         }
+
+        public event Action<Vector3Int[]> OnFlush;
 
         public void Clear()
         {
             _tiles.Clear();
-            _tileChangeStack.Clear();
-            foreach (var tilemap in _tilemaps)
+            _tileChangeStack.Foreach(x => x.Clear());
+            foreach (var tilemap in _tilemaps) 
             {
                 tilemap.Clear();
             }
