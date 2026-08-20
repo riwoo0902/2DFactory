@@ -1,9 +1,8 @@
 using System.IO;
 using UnityEditor.AssetImporters;
 using UnityEngine;
-using LrwLib.ButtonAttribute;
 
-namespace LrwLib.UnityExcel
+namespace LrwLib.UnityExcel.Editor
 {
     [ScriptedImporter(version: 13, ext: "xlsx")]
     public class ExcelImporter : ScriptedImporter
@@ -16,7 +15,7 @@ namespace LrwLib.UnityExcel
             Debug.Log(path);
             
             Excel excel = ScriptableObject.CreateInstance<Excel>();
-            excel.testText = "";
+            excel.TestText = "";
             
             ctx.AddObjectToAsset("data", excel);
             ctx.SetMainObject(excel);
