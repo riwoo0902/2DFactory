@@ -7,24 +7,18 @@ namespace _Script._SaveSystem
 {
     public class SaveDebugger : MonoBehaviour
     {
-        private SaveManager _saveManager;
-        [SerializeField]
-        private TextMeshProUGUI textMeshProUGUI;
+        [SerializeField] private TextMeshProUGUI textMeshProUGUI;
+        
         private void Awake()
         {
-            _saveManager = new SaveManager();
-        }
-
-        private void Start()
-        {
-            textMeshProUGUI.text = _saveManager.DirectoryPath;
-            _saveManager.WriteFile("TestFile","riwoo");
+            Log();
         }
 
         [UnityButton]
-        private void LogDirectoryPath()
+        private void Log()
         {
-            Debug.Log(_saveManager.DirectoryPath);
+            textMeshProUGUI.text = SaveManager.DirectoryPath;
+            SaveManager.WriteFile("TestFile.txt","riwoo");
         }
     }
 }
