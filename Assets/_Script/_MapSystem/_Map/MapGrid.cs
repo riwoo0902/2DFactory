@@ -19,7 +19,7 @@ namespace _Script._MapSystem._Map
             _tileMaps = new();
             
             _tileMaps.Add(MapLayerType.Biome,      new MapTileMap(nameof(MapLayerType.Biome),      _grid.transform,0));
-            _tileMaps.Add(MapLayerType.Tile,       new ColliderTileMap(nameof(MapLayerType.Tile),  _grid.transform,1));
+            _tileMaps.Add(MapLayerType.Tile,       new MultiTileMap(nameof(MapLayerType.Tile),  _grid.transform,1));
             _tileMaps.Add(MapLayerType.Structure,  new MapTileMap(nameof(MapLayerType.Structure),  _grid.transform,2));
             _tileMaps.Add(MapLayerType.LiquidPipe, new MapTileMap(nameof(MapLayerType.LiquidPipe), _grid.transform,3));
             _tileMaps.Add(MapLayerType.GasPipe,    new MapTileMap(nameof(MapLayerType.GasPipe),    _grid.transform,4));

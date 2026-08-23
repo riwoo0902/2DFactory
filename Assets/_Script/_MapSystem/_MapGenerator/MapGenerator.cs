@@ -5,7 +5,9 @@ using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
 using _Script._MapSystem._Map._Tile;
 using _Script._MapSystem._Map._Tile._Tiles;
+using _Script._MapSystem._Map._Tile._Tiles._GameTiles;
 using _Script._MapSystem._Map._TileMap;
+using _Script._MapSystem._Map._TileMap._TileMaps;
 using _Script._MapSystem._MapGenerator._Biome;
 using UnityEngine;
 using Random = System.Random;
@@ -67,7 +69,7 @@ namespace _Script._MapSystem._MapGenerator
         {
             Random random = new Random(seed);
             BiomeGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap, random);
-            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap,grid.GetTileMap(MapLayerType.Tile) as MapTileMap,random);
+            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap,grid.GetTileMap(MapLayerType.Tile) as MultiTileMap,random);
         }
         
         #region Biome
@@ -140,7 +142,7 @@ namespace _Script._MapSystem._MapGenerator
         
         private static readonly Vector3Int[] Dir4 = { new(1,0), new(-1,0), new(0,1), new(0,-1) };
         
-        private void BiomeOutLineGenerate(MapTileMap biomeMap,MapTileMap tileMap, Random seed)
+        private void BiomeOutLineGenerate(MapTileMap biomeMap,MultiTileMap tileMap, Random seed)
         {
             if(biomeMap == null) throw new Exception("BiomeTileMap is null");
             if(tileMap == null) throw new Exception("TileTileMap is null");
@@ -175,11 +177,11 @@ namespace _Script._MapSystem._MapGenerator
             {
                 foreach (Vector3Int pos in GetPosList(outLinePos,mapGenerateData.BiomeOutLinePower,posList))
                 {
-                    tileMap.SetTile(pos,new GameTile(mapGenerateData.BiomeOutLineTile));
+                    tileMap.SetTile(pos,new ObjectTile(mapGenerateData.BiomeOutLineTile));
                 }
             }
         }
-
+        
         private List<Vector3Int> GetPosList(Vector3Int center, int radius,List<Vector3Int> list = null)
         {
             if(list == null) list = new List<Vector3Int>();
