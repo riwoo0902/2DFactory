@@ -1,12 +1,13 @@
-using System;
 using System.IO;
+using _Script._Test;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace _Script._SaveSystem
 {
     public static class SaveManager
     {
-        private static readonly string DirectoryName = "SaveData";
+        private const string DirectoryName = "SaveData";
 
         public static string DirectoryPath;
 
@@ -26,8 +27,15 @@ namespace _Script._SaveSystem
 
         public static void WriteFile(string path, string text)
         {
-            string filePath = PathCombine(DirectoryPath, path);
-            File.WriteAllText(filePath, text);
+            try
+            {
+                string filePath = PathCombine(DirectoryPath, path);
+                File.WriteAllText(filePath, text);
+            }
+            catch
+            {
+                FDebug.Log("Save Failed");
+            }
         }
         
         public static string ReadFile(string path, string baseData = "")
