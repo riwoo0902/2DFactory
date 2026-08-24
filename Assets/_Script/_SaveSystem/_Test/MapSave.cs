@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using _Script._Test;
@@ -10,7 +9,6 @@ namespace _Script._SaveSystem._Test
     [RequireComponent(typeof(Tilemap))]
     public class MapSave : MonoBehaviour
     {
-        
         private Tilemap _tilemap;
 
         [SerializeField] private Tile tile;
@@ -51,15 +49,13 @@ namespace _Script._SaveSystem._Test
             try
             {
                 int[] arr = data.Split(",").Select(int.Parse).ToArray();
-                Vector3Int vec = new(arr[0], arr[1], arr[2]);
-                return vec;
+                return new(arr[0], arr[1], arr[2]);
             }
             catch
             {
                 FDebug.Log(data);
                 return Vector3Int.zero;
             }
-            
         }
 
         private void OnDisable()
