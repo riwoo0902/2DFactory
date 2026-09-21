@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eebb15ccaba541fa83d654cb4c9ac837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Script._MapSystem._Map.Map
+  mapGenerateData: {fileID: 11400000, guid: 075dbadb878aeec4792e21d2cb3528bd, type: 2}
   seed: 0
 --- !u!1 &519420028
 GameObject:
@@ -403,7 +404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d3cccbec49e4fae905a3955a0b33c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Script._MapSystem._MapGenerator.MapGenerator
-  mapGenerateData: {fileID: 11400000, guid: 075dbadb878aeec4792e21d2cb3528bd, type: 2}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

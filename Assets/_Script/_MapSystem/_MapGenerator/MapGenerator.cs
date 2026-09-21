@@ -16,8 +16,6 @@ namespace _Script._MapSystem._MapGenerator
 {
     public class MapGenerator : MonoBehaviour
     {
-        [SerializeField] private MapGenerateData mapGenerateData;
-        
         private void Awake()
         {
             EventBus<MapGenerateEvent>.Event += MapGenerate;
@@ -36,23 +34,26 @@ namespace _Script._MapSystem._MapGenerator
                 Debug.Log("MapGenerate Start");
                 
                 MapGrid grid = evt.MapGrid;
+                MapGenerateData data = evt.MapGenerateData;
                 int seed = evt.Seed;
 
                 Debug.Assert(grid != null, "MapGrid is null");
 
-                if (!_grids.Add(grid))
+                if (grid.IsGenerating)
                 {
                     Debug.LogWarning("This MapGrid is Generating");
                     return;
                 }
 
+                grid.IsGenerating = true;
+                
                 grid.Clear();
 
-                await Task.Run(() => MapGenerate(grid, seed));
+                await Task.Run(() => MapGenerate(grid, data, seed));
 
                 grid.Flush();
                 
-                _grids.Remove(evt.MapGrid);
+                grid.IsGenerating = false;
                 
                 Debug.Log("MapGenerate End");
                 
@@ -65,16 +66,16 @@ namespace _Script._MapSystem._MapGenerator
             }
         }
 
-        private void MapGenerate(MapGrid grid, int seed)
+        private void MapGenerate(MapGrid grid, MapGenerateData mapGenerateData, int seed)
         {
             Random random = new Random(seed);
-            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap, random);
-            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap,grid.GetTileMap(MapLayerType.Tile) as MultiTileMap,random);
+            BiomeGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap, mapGenerateData, random);
+            BiomeOutLineGenerate(grid.GetTileMap(MapLayerType.Biome) as MapTileMap,grid.GetTileMap(MapLayerType.Tile) as MultiTileMap, mapGenerateData, random);
         }
         
         #region Biome
 
-        private void BiomeGenerate(MapTileMap tileMap, Random random)
+        private void BiomeGenerate(MapTileMap tileMap,MapGenerateData mapGenerateData, Random random)
         {
             if(tileMap == null) throw new Exception("BiomeTileMap is null");
             if(random == null) throw new Exception("Random is null");
@@ -90,7 +91,7 @@ namespace _Script._MapSystem._MapGenerator
                 {
                     Vector3Int noise = new Vector3Int(random.Next(0, mapGenerateData.BiomeCenterNoisePower), random.Next(0, mapGenerateData.BiomeCenterNoisePower));
                     Vector3Int pos = GetBiomePos(x,y,biomeSize) + noise;
-                    if(!CheckInMap(pos)) continue;
+                    if(!CheckInMap(pos, mapGenerateData)) continue;
                     TileData data = mapGenerateData.BiomeTiles[random.Next(0, mapGenerateData.BiomeTiles.Length)];
                     biomes.Add(new Biome(data,pos));
                 }
@@ -104,7 +105,6 @@ namespace _Script._MapSystem._MapGenerator
                 {
                     Vector3Int pos = new Vector3Int(x, y);
                     Biome biome = GetNearBiome(pos, biomes);
-                    biome.Size += 1;
                     tileMap.SetTile(pos, new BiomeTile(biome.Data));
                 }
             }
@@ -142,7 +142,7 @@ namespace _Script._MapSystem._MapGenerator
         
         private static readonly Vector3Int[] Dir4 = { new(1,0), new(-1,0), new(0,1), new(0,-1) };
         
-        private void BiomeOutLineGenerate(MapTileMap biomeMap,MultiTileMap tileMap, Random seed)
+        private void BiomeOutLineGenerate(MapTileMap biomeMap,MultiTileMap tileMap, MapGenerateData mapGenerateData, Random seed)
         {
             if(biomeMap == null) throw new Exception("BiomeTileMap is null");
             if(tileMap == null) throw new Exception("TileTileMap is null");
@@ -175,14 +175,14 @@ namespace _Script._MapSystem._MapGenerator
             List<Vector3Int> posList = new();
             foreach (Vector3Int outLinePos in outLineList)
             {
-                foreach (Vector3Int pos in GetPosList(outLinePos,mapGenerateData.BiomeOutLinePower,posList))
+                foreach (Vector3Int pos in GetPosList(outLinePos, mapGenerateData.BiomeOutLinePower, mapGenerateData, posList))
                 {
                     tileMap.SetTile(pos,new ObjectTile(mapGenerateData.BiomeOutLineTile));
                 }
             }
         }
         
-        private List<Vector3Int> GetPosList(Vector3Int center, int radius,List<Vector3Int> list = null)
+        private List<Vector3Int> GetPosList(Vector3Int center, int radius, MapGenerateData mapGenerateData,List<Vector3Int> list = null)
         {
             if(list == null) list = new List<Vector3Int>();
             else list.Clear();
@@ -200,7 +200,7 @@ namespace _Script._MapSystem._MapGenerator
                             center.y + y,
                             center.z
                         );
-                        if(!CheckInMap(pos)) continue;
+                        if(!CheckInMap(pos, mapGenerateData)) continue;
                         list.Add(pos);
                     }
                 }
@@ -211,6 +211,6 @@ namespace _Script._MapSystem._MapGenerator
         
         #endregion
         
-        private bool CheckInMap(Vector3Int pos) => (0 <= pos.x && pos.x < mapGenerateData.MapSizeX && 0 <= pos.y && pos.y < mapGenerateData.MapSizeY);
+        private bool CheckInMap(Vector3Int pos,MapGenerateData mapGenerateData) => (0 <= pos.x && pos.x < mapGenerateData.MapSizeX && 0 <= pos.y && pos.y < mapGenerateData.MapSizeY);
     }
 }
