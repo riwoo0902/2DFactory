@@ -1,25 +1,23 @@
 using _Script._Core._EventSystem;
 using _Script._MapSystem._Map;
+using _Script._MapSystem._MapGenerator;
 
 namespace _Script._MapSystem
 {
-    public static class MapEvents
-    {
-        
-    }
-    
-    public struct MapGenerateEvent : IEvent
+    public readonly struct MapGenerateEvent : IEvent
     {
         public readonly MapGrid MapGrid;
-        public int Seed { get; private set; }
-        public MapGenerateEvent(MapGrid mapGrid,int seed)
+        public readonly MapGenerateData MapGenerateData;
+        public readonly int Seed;
+        public MapGenerateEvent(MapGrid mapGrid,MapGenerateData mapGenerateData,int seed)
         {
             MapGrid = mapGrid;
+            MapGenerateData = mapGenerateData;
             Seed = seed;
         }
     }
     
-    public struct MapGenerateEndEvent : IEvent
+    public readonly struct MapGenerateEndEvent : IEvent
     {
         public readonly MapGrid MapGrid;
         public MapGenerateEndEvent(MapGrid mapGrid)

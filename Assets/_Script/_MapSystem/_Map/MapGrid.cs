@@ -13,6 +13,8 @@ namespace _Script._MapSystem._Map
         
         private readonly Dictionary<MapLayerType, ITileMap> _tileMaps;
         
+        public bool IsGenerating { get; set; }
+        
         public MapGrid(Grid grid)
         {
             _grid = grid;
