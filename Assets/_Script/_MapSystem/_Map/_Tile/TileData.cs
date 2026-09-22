@@ -7,5 +7,6 @@ namespace _Script._MapSystem._Map._Tile
     public class TileData : ScriptableObject
     {
         [field: SerializeField] public TileBase Tile { get; private set; }
+        
     }
 }
