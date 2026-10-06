@@ -10,6 +10,11 @@ namespace _Script._Test
             Debug.unityLogger.Log(logType, msg);
 #endif
         }
-        
+
+        public static void Assert(bool b, string text)
+        {
+            if(b) return;
+            Log(text,LogType.Assert);
+        }
     }
 }
